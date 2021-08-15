@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="favicon.ico" />
+    <link rel="stylesheet" href="/public/css/friends.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- ejs magic -->
+    <%- include('./partials/head'); %>
+    <script>
+      const ROOM_ID = " <%= room_code %>";
+      console.log(ROOM_ID);
+    </script>
+    <script
+      type="text/javascript"
+      src="https://p5livemedia.itp.io/simplepeer.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://p5livemedia.itp.io/socket.io.js"
+    ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/addons/p5.sound.min.js"></script>
+    <script
+      type="text/javascript"
+      src="https://p5livemedia.itp.io/p5livemedia.js"
+    ></script>
+    <style>
+      video {
+        transform: rotateY(180deg);
+        -webkit-transform: rotateY(180deg); /* Safari and Chrome */
+        -moz-transform: rotateY(180deg); /* Firefox */
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- <%- include('./partials/navbar'); %> -->
+
+    <div class="ui container" style="text-align: center">
+      <span class="ui header">Room Code:</span>
+      <span id="room-code" class="ui header"> <%= room_code %> </span>
+      <span class="ui header">(Share this room code with your friend)</span>
+
+      <h2>You</h2>
+      <p class="scores">
+        (<span id="poseCounter" onchange="updatescore()">0</span>/6) poses done
+      </p>
+      <div style="min-height: 480px"></div>
+
+      <h2>Opponent</h2>
+      <p class="scores">(<span id="poseCounterOther">0</span>/6) poses done</p>
+      <div style="min-height: 480px"></div>
+
+      <button class="ui labeled red large icon button" onclick="endcall()">
+        <i class="stop icon"></i>
+        End call
+      </button>
+    </div>
+
+    <script src="/public/js/friends.js"></script>
+  </body>
+</html>

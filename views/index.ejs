@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('./partials/head'); %>
+    <!-- <style>
+      body {
+        overflow-y: hidden;
+      }
+    </style> -->
+    <link rel="stylesheet" href="/css/chat.css" type="text/css" />
+  </head>
+
+  <body>
+    <script src="https://cdn.socket.io/socket.io-3.0.0.js"></script>
+
+    <%- include('./partials/navbar'); %>
+    <div class="ui center aligned padded grid homebuttongrid">
+ 
+
+      <div class="three wide column">
+        <button
+          onclick="window.location.href='/room_details'"
+          class="large ui button massive circular homebuttons"
+        >
+          Play with a friend
+        </button>
+      </div>
+      
+  </body>
+</html>
