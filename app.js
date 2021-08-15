@@ -95,7 +95,6 @@ app.get("/logout", function (req, res) {
 // ------------------------ Authentication Ends ------------------------------
 
 //backend routes
-app.use("/api/room", require("./routes/room.js"));
 app.use(router);
 
 //frontend routes
@@ -132,7 +131,7 @@ io.on("connection", (socket) => {
   });
 });
 
-var port = process.env.PORT || 5000;
+var port = process.env.PORT || 3000;
 app.listen(port, function () {
   console.log("Server Has Started!!");
 });
