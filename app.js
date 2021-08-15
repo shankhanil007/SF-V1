@@ -13,17 +13,25 @@ const path = require("path");
 require("dotenv").config();
 
 const router = (global.router = express.Router());
-const port = process.env.PORT || 5000;
 const cors = require("cors");
 
 app.use(cors());
 app.use(express.json());
 app.set("view engine", "ejs");
 
-app.use(express.static("public"));
+app.use(express.static(__dirname + "/public"));
+app.use("/public", express.static(__dirname + "/public"));
+
+mongoose.connect(
+  "mongodb+srv://shankhanil007:12345@cluster0.azmz3.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+  }
+);
 
 //------------- Initialising passport ----------------
-
 app.use(
   require("express-session")({
     secret: "This the secret message for authentication",
@@ -124,6 +132,7 @@ io.on("connection", (socket) => {
   });
 });
 
-server.listen(port, () => {
-  console.log(`vFit server listening at http://localhost:${port}`);
+var port = process.env.PORT || 5000;
+app.listen(port, function () {
+  console.log("Server Has Started!!");
 });
