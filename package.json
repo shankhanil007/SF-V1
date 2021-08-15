@@ -2,7 +2,7 @@
   "name": "vfit",
   "version": "1.0.0",
   "description": "All commits to the main branch are deployed automatically to https://v-fit.herokuapp.com/\r (so don't commit to main or make a PR without testing the production build)",
-  "main": "index.js",
+  "main": "app.js",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "bootstrap": "^5.0.1",
@@ -18,16 +18,9 @@
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/AdityaKotari/vFit.git"
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
   "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/AdityaKotari/vFit/issues"
-  },
-  "homepage": "https://github.com/AdityaKotari/vFit#readme"
+  "license": "ISC"
 }
