@@ -15,6 +15,7 @@ require("dotenv").config();
 const router = (global.router = express.Router());
 const cors = require("cors");
 
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 app.use(express.json());
 app.set("view engine", "ejs");
@@ -65,7 +66,7 @@ app.post("/signup", function (req, res) {
     new User({
       username: req.body.username,
       name: req.body.name,
-      phone: req.body.phone,
+      email: req.body.email,
     }),
     req.body.password,
     function (err, user) {
