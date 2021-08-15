@@ -2,6 +2,9 @@ let otherVideo;
 let video;
 let poseNet;
 let poses = [];
+var stage = "";
+var counter = 0;
+var flag = 0;
 
 function setup() {
   var canvas = createCanvas(640, 480);
@@ -93,41 +96,42 @@ function drawKeypoints() {
   // }
 
   // ------------------------------------ DUMBELL -----------------------------------------
-  // if (poses.length > 0) {
-  //   pose = poses[0].pose;
+  if (poses.length > 0) {
+    pose = poses[0].pose;
 
-  //   if (pose.keypoints.length >= 9) {
-  //     let shoulder = [
-  //       pose.keypoints[5].position.x,
-  //       pose.keypoints[5].position.y,
-  //     ];
-  //     let elbow = [
-  //       pose.keypoints[7].position.x,
-  //       pose.keypoints[7].position.y,
-  //     ];
-  //     let wrist = [
-  //       pose.keypoints[9].position.x,
-  //       pose.keypoints[9].position.y,
-  //     ];
+    if (pose.keypoints.length >= 9) {
+      let shoulder = [
+        pose.keypoints[5].position.x,
+        pose.keypoints[5].position.y,
+      ];
+      let elbow = [pose.keypoints[7].position.x, pose.keypoints[7].position.y];
+      let wrist = [pose.keypoints[9].position.x, pose.keypoints[9].position.y];
 
-  //     let angle = find_angle(shoulder, elbow, wrist);
-  //     // console.log(angle);
+      let angle = find_angle(shoulder, elbow, wrist);
+      // console.log(angle);
 
-  //     if (angle > 2.5) {
-  //       stage = "down";
-  //       // console.log("down");
-  //     }
-  //     if (
-  //       angle < 1 &&
-  //       (stage.localeCompare("") == 0 || stage.localeCompare("down") == 0)
-  //     ) {
-  //       stage = "up";
-  //       counter += 1;
-  //       console.log("up");
-  //       // console.log(counter);
-  //     }
-  //   }
-  // }
+      if (angle > 2.5) {
+        stage = "down";
+        // console.log("down");
+      }
+      if (
+        angle < 1 &&
+        (stage.localeCompare("") == 0 || stage.localeCompare("down") == 0)
+      ) {
+        stage = "up";
+        counter += 1;
+        console.log("up");
+        // console.log(counter);
+      }
+    }
+  }
+}
+
+function find_angle(A, B, C) {
+  var AB = Math.sqrt(Math.pow(B[0] - A[0], 2) + Math.pow(B[1] - A[1], 2));
+  var BC = Math.sqrt(Math.pow(B[0] - C[0], 2) + Math.pow(B[1] - C[1], 2));
+  var AC = Math.sqrt(Math.pow(C[0] - A[0], 2) + Math.pow(C[1] - A[1], 2));
+  return Math.acos((BC * BC + AB * AB - AC * AC) / (2 * BC * AB));
 }
 
 function gotData(data, id) {

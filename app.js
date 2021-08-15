@@ -102,15 +102,12 @@ app.use(router);
 app.get("/", (req, res) => {
   res.render("index");
 });
-app.get("/friendplay/:roomcode", (req, res) => {
-  res.render("friendplay", { room_code: req.params.roomcode });
+app.get("/friendplay/:roomcode/1", (req, res) => {
+  res.render("game1", { room_code: req.params.roomcode });
 });
 
 app.get("/room_details", (req, res) => {
   res.render("room_details");
-});
-app.get("/profile/:user_id", (req, res) => {
-  res.render("profile", { user_id: req.params.user_id });
 });
 
 //socket.io
