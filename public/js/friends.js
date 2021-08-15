@@ -130,10 +130,17 @@ function drawKeypoints() {
   // }
 }
 
+function gotData(data, id) {
+  // If it is JSON, parse it
+  let d = JSON.parse(data);
+  document.getElementById("poseCounterOther").textContent = d;
+  console.log(d);
+}
+
 function gotStream(stream, id) {
   // This is just like a video/stream from createCapture(VIDEO)
   otherVideo = stream;
   //otherVideo.id and id are the same and unique identifiers
   otherVideo.size(320, 240);
-  otherVideo.position(1100, 180);
+  otherVideo.position(1000, 180);
 }
