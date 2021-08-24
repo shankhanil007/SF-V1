@@ -3,20 +3,25 @@ var uuid = require("uuid");
 var calls = [];
 
 function Call() {
-  this.peers = [];
+  this.peers = {};
 }
 
 Call.prototype.toJSON = function () {
   return { peers: this.peers };
 };
 
-Call.prototype.addPeer = function (peerId) {
-  this.peers.push(peerId);
+Call.prototype.addPeer = function (peerId, room) {
+  if (this.peers[room] === undefined) {
+    this.peers[room] = [];
+    this.peers[room].push(peerId);
+  } else {
+    this.peers[room].push(peerId);
+  }
 };
 
-Call.prototype.removePeer = function (peerId) {
-  var index = this.peers.lastIndexOf(peerId);
-  if (index !== -1) this.peers.splice(index, 1);
+Call.prototype.removePeer = function (peerId, room) {
+  var index = this.peers[room].lastIndexOf(peerId);
+  if (index !== -1) this.peers[room].splice(index, 1);
 };
 
 Call.create = function () {

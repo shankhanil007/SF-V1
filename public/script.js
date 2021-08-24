@@ -69,12 +69,11 @@ function createRoom() {
     alert("Please enter room number");
     return;
   }
-  room_id = PRE + room + SUF;
 
   peer = new Peer();
   peer.on("open", (id) => {
     console.log("Peer Connected with ID: ", id);
-    socket.emit("new-user", id);
+    socket.emit("new-user", { id, room });
 
     hideModal();
     getUserMedia(
@@ -113,7 +112,7 @@ function joinRoom() {
   peer = new Peer();
   peer.on("open", (id) => {
     console.log("Connected with Id: " + id);
-    socket.emit("new-user", id);
+    socket.emit("new-user", { id, room });
     // $.getScript("users.js", function () {
     //   console.log(addUser(id));
     // });
@@ -137,7 +136,7 @@ function joinRoom() {
           });
         });
 
-        call.peers.forEach(function (id) {
+        call.peers[room].forEach(function (id) {
           const calls = peer.call(id, stream);
           const video = document.createElement("video");
           video.setAttribute("id", id);
