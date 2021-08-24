@@ -14,6 +14,11 @@ Call.prototype.addPeer = function (peerId) {
   this.peers.push(peerId);
 };
 
+Call.prototype.removePeer = function (peerId) {
+  var index = this.peers.lastIndexOf(peerId);
+  if (index !== -1) this.peers.splice(index, 1);
+};
+
 Call.create = function () {
   var call = new Call();
   calls.push(call);

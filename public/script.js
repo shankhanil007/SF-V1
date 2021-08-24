@@ -10,6 +10,13 @@ var local_stream;
 var peer = null;
 var currentPeer = null;
 const videoGrid = document.getElementById("video-grid");
+const socket = io();
+
+socket.on("user-disconnected", (userId) => {
+  console.log(userId);
+  const video = document.getElementById(userId);
+  video.remove();
+});
 
 //---------------------------------------------------------------------------------------
 
@@ -63,11 +70,13 @@ function createRoom() {
     return;
   }
   room_id = PRE + room + SUF;
+  // socket.on("user-connected");
   peer = new Peer();
   peer.on("open", (id) => {
     console.log("Peer Connected with ID: ", id);
+    socket.emit("new-user", id);
 
-    $.post("/addpeer/" + id);
+    // $.post("/addpeer/" + id);
 
     hideModal();
     getUserMedia(
@@ -86,6 +95,7 @@ function createRoom() {
   peer.on("call", (call) => {
     call.answer(local_stream);
     const video = document.createElement("video");
+    video.setAttribute("id", call.peer);
     call.on("stream", (stream) => {
       setRemoteStream(stream, video);
     });
@@ -105,11 +115,12 @@ function joinRoom() {
   peer = new Peer();
   peer.on("open", (id) => {
     console.log("Connected with Id: " + id);
+    socket.emit("new-user", id);
     // $.getScript("users.js", function () {
     //   console.log(addUser(id));
     // });
 
-    $.post("/addpeer/" + id);
+    // $.post("/addpeer/" + id);
 
     getUserMedia(
       { video: true, audio: false },
@@ -122,6 +133,7 @@ function joinRoom() {
           // Answer the call, providing our mediaStream
           call.answer(local_stream);
           const video = document.createElement("video");
+          video.setAttribute("id", call.peer);
           call.on("stream", (stream) => {
             setRemoteStream(stream, video);
           });
@@ -133,26 +145,29 @@ function joinRoom() {
         call.peers.forEach(function (id) {
           const calls = peer.call(id, stream);
           const video = document.createElement("video");
+          video.setAttribute("id", id);
           calls.on("stream", (stream) => {
             setRemoteStream(stream, video);
           });
-
+          calls.on("close", () => {
+            console.log("Closed");
+            video.remove();
+          });
           currentPeer = calls;
         });
-
-        const calls = peer.call(room_id, stream);
-        const video = document.createElement("video");
-        calls.on("stream", (stream) => {
-          setRemoteStream(stream, video);
-        });
-
-        currentPeer = calls;
       },
       (err) => {
         console.log(err);
       }
     );
   });
+  // peer.on("close", (id) => {
+  //   console.log("Connection lost. Please reconnect");
+  //   console.log(call.peers);
+  //   $.post("/removepeer/" + id);
+  //   console.log(call.peers);
+  //   peer.destroy();
+  // });
 }
 
 function setLocalStream(stream) {
@@ -161,14 +176,14 @@ function setLocalStream(stream) {
   video.muted = true;
   video.play();
 
-  const camera = new Camera(video, {
-    onFrame: async () => {
-      await pose.send({ image: video });
-    },
-    width: 300,
-    height: 250,
-  });
-  camera.start();
+  // const camera = new Camera(video, {
+  //   onFrame: async () => {
+  //     await pose.send({ image: video });
+  //   },
+  //   width: 300,
+  //   height: 250,
+  // });
+  // camera.start();
 }
 
 function setRemoteStream(stream, video) {

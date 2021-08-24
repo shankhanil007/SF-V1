@@ -99,3 +99,9 @@ video {
   grid-template-columns: repeat(auto-fill, 300px);
   grid-auto-rows: 300px;
 }
+
+.xyz {
+  top: 350;
+  left: 15;
+  position: absolute;
+}
