@@ -73,7 +73,7 @@ function createRoom() {
   peer = new Peer();
   peer.on("open", (id) => {
     console.log("Peer Connected with ID: ", id);
-    socket.emit("new-user", id);
+    socket.emit("new-user", { id, room });
 
     hideModal();
     getUserMedia(
@@ -112,7 +112,7 @@ function joinRoom() {
   peer = new Peer();
   peer.on("open", (id) => {
     console.log("Connected with Id: " + id);
-    socket.emit("new-user", id);
+    socket.emit("new-user", { id, room });
     // $.getScript("users.js", function () {
     //   console.log(addUser(id));
     // });
@@ -136,7 +136,7 @@ function joinRoom() {
           });
         });
 
-        call.peers.forEach(function (id) {
+        call.peers[room].forEach(function (id) {
           const calls = peer.call(id, stream);
           const video = document.createElement("video");
           video.setAttribute("id", id);
@@ -158,21 +158,19 @@ function joinRoom() {
 }
 
 function setLocalStream(stream) {
-  console.log(call);
-
   let video = document.getElementById("local-video");
   video.srcObject = stream;
   video.muted = true;
   video.play();
 
-  // const camera = new Camera(video, {
-  //   onFrame: async () => {
-  //     await pose.send({ image: video });
-  //   },
-  //   width: 300,
-  //   height: 250,
-  // });
-  // camera.start();
+  const camera = new Camera(video, {
+    onFrame: async () => {
+      await pose.send({ image: video });
+    },
+    width: 300,
+    height: 250,
+  });
+  camera.start();
 }
 
 function setRemoteStream(stream, video) {

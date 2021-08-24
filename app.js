@@ -16,14 +16,17 @@ const io = require("socket.io")(server);
 
 io.on("connection", (socket) => {
   console.log("Socket Connected");
-  socket.on("new-user", (id) => {
-    users[socket.id] = id;
-    call.addPeer(id);
+  socket.on("new-user", ({ id, room }) => {
+    users[socket.id] = { id, room };
+    call.addPeer(id, room);
   });
   socket.on("disconnect", () => {
     console.log("Socket Disonnected");
-    socket.broadcast.emit("user-disconnected", users[socket.id]);
-    call.removePeer(users[socket.id]);
+
+    if (users[socket.id] != undefined) {
+      socket.broadcast.emit("user-disconnected", users[socket.id].id);
+      call.removePeer(users[socket.id].id, users[socket.id].room);
+    }
   });
 });
 
