@@ -1,135 +1,25 @@
-//dependencies and setup
+var path = require("path");
 const express = require("express");
-const bodyParser = require("body-parser");
-const request = require("request");
-const mongoose = require("mongoose");
-const passport = require("passport");
-const LocalStrategy = require("passport-local");
-const passportLocalMongoose = require("passport-local-mongoose");
-const User = require("./models/user");
+var Call = require("./call");
+
+var call = Call.create();
+
 const app = express();
-const path = require("path");
-
-require("dotenv").config();
-
-const router = (global.router = express.Router());
-const cors = require("cors");
-
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors());
-app.use(express.json());
+app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
+app.use(express.static("public"));
 
-app.use(express.static(__dirname + "/public"));
-app.use("/public", express.static(__dirname + "/public"));
-
-mongoose.connect(
-  "mongodb+srv://shankhanil007:12345@cluster0.azmz3.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false,
-  }
-);
-
-//------------- Initialising passport ----------------
-app.use(
-  require("express-session")({
-    secret: "This the secret message for authentication",
-    resave: false,
-    saveUninitialized: false,
-  })
-);
-
-app.use(passport.initialize());
-app.use(passport.session());
-passport.use(new LocalStrategy(User.authenticate()));
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
-
-app.use(function (req, res, next) {
-  res.locals.currentUser = req.user;
-  next();
-});
-
-//------------------------   Authentication Routes  -------------------------
-
-app.get("/login", function (req, res) {
-  res.render("login.ejs");
-});
-app.get("/signup", function (req, res) {
-  res.render("signup.ejs");
-});
-
-app.post("/signup", function (req, res) {
-  User.register(
-    new User({
-      username: req.body.username,
-      name: req.body.name,
-      email: req.body.email,
-    }),
-    req.body.password,
-    function (err, user) {
-      if (err) {
-        console.log(err);
-      }
-      passport.authenticate("local")(req, res, function () {
-        res.redirect("/");
-      });
-    }
-  );
-});
-
-app.post(
-  "/login",
-  passport.authenticate("local", {
-    successRedirect: "/",
-    failureRedirect: "/login",
-  }),
-  function (req, res) {}
-);
-app.get("/logout", function (req, res) {
-  req.logout();
-  res.redirect("/");
-});
-
-// ------------------------ Authentication Ends ------------------------------
-
-//backend routes
-app.use(router);
-
-//frontend routes
-app.get("/", (req, res) => {
-  res.render("index");
-});
-app.get("/friendplay/:roomcode/1", (req, res) => {
-  res.render("game1", { room_code: req.params.roomcode });
-});
-
-app.get("/room_details", (req, res) => {
-  res.render("room_details");
-});
-
-//socket.io
-const server = require("http").Server(app);
-const io = require("socket.io")(server, {
-  cors: { origin: "*" },
-});
-
-io.on("connection", (socket) => {
-  console.log("someone connected to a socket");
-  socket.on("join_room", (room_code) => {
-    console.log("user joined room " + room_code);
-    socket.join(room_code);
-    io.to(room_code).emit("share_id");
-  });
-  socket.on("share_id2", (room_code, id) => {
-    io.to(room_code).emit("webrtc_id", id);
-    console.log("room " + room_code + " id " + id);
+// Landing page
+app.get("/", function (req, res) {
+  res.render("index", {
+    call: call,
   });
 });
 
-var port = process.env.PORT || 3000;
-app.listen(port, function () {
-  console.log("Server Has Started!!");
+app.post("/addpeer/:peerid", function (req, res) {
+  call.addPeer(req.param("peerid"));
+
+  res.json(call.toJSON());
 });
+
+app.listen(process.env.PORT || 3000, () => console.log(`Server has started.`));
