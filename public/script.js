@@ -69,7 +69,6 @@ function createRoom() {
     alert("Please enter room number");
     return;
   }
-  room_id = PRE + room + SUF;
 
   peer = new Peer();
   peer.on("open", (id) => {
@@ -159,19 +158,21 @@ function joinRoom() {
 }
 
 function setLocalStream(stream) {
+  console.log(call);
+
   let video = document.getElementById("local-video");
   video.srcObject = stream;
   video.muted = true;
   video.play();
 
-  const camera = new Camera(video, {
-    onFrame: async () => {
-      await pose.send({ image: video });
-    },
-    width: 300,
-    height: 250,
-  });
-  camera.start();
+  // const camera = new Camera(video, {
+  //   onFrame: async () => {
+  //     await pose.send({ image: video });
+  //   },
+  //   width: 300,
+  //   height: 250,
+  // });
+  // camera.start();
 }
 
 function setRemoteStream(stream, video) {
