@@ -70,13 +70,11 @@ function createRoom() {
     return;
   }
   room_id = PRE + room + SUF;
-  // socket.on("user-connected");
+
   peer = new Peer();
   peer.on("open", (id) => {
     console.log("Peer Connected with ID: ", id);
     socket.emit("new-user", id);
-
-    // $.post("/addpeer/" + id);
 
     hideModal();
     getUserMedia(
@@ -138,9 +136,6 @@ function joinRoom() {
             setRemoteStream(stream, video);
           });
         });
-        // $.getScript("users.js", function () {
-        //   console.log(getUsersInRoom());
-        // });
 
         call.peers.forEach(function (id) {
           const calls = peer.call(id, stream);
@@ -161,13 +156,6 @@ function joinRoom() {
       }
     );
   });
-  // peer.on("close", (id) => {
-  //   console.log("Connection lost. Please reconnect");
-  //   console.log(call.peers);
-  //   $.post("/removepeer/" + id);
-  //   console.log(call.peers);
-  //   peer.destroy();
-  // });
 }
 
 function setLocalStream(stream) {
@@ -176,19 +164,17 @@ function setLocalStream(stream) {
   video.muted = true;
   video.play();
 
-  // const camera = new Camera(video, {
-  //   onFrame: async () => {
-  //     await pose.send({ image: video });
-  //   },
-  //   width: 300,
-  //   height: 250,
-  // });
-  // camera.start();
+  const camera = new Camera(video, {
+    onFrame: async () => {
+      await pose.send({ image: video });
+    },
+    width: 300,
+    height: 250,
+  });
+  camera.start();
 }
 
 function setRemoteStream(stream, video) {
-  // const video = document.createElement("video");
-  // let video = document.getElementById("remote-video");
   video.srcObject = stream;
   video.play();
   videoGrid.append(video);
@@ -206,3 +192,5 @@ function notify(msg) {
     notification.hidden = true;
   }, 3000);
 }
+
+// Learnt how to run methods from another JS file and how to make API requests from JS using jQuery

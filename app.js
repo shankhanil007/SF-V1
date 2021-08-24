@@ -7,15 +7,10 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 
-const server = app.listen(3000);
+const server = app.listen(3000, () => console.log(`Server has started.`));
 
 var call = Call.create();
 const users = {};
-
-// const http = require("http");
-// const socketio = require("socket.io");
-// const server = http.createServer(app);
-// const io = socketio(server);
 
 const io = require("socket.io")(server);
 
@@ -39,17 +34,15 @@ app.get("/", function (req, res) {
   });
 });
 
-app.post("/addpeer/:peerid", function (req, res) {
-  call.addPeer(req.param("peerid"));
-  res.json(call.toJSON());
-});
+// app.post("/addpeer/:peerid", function (req, res) {
+//   call.addPeer(req.param("peerid"));
+//   res.json(call.toJSON());
+// });
 
-app.post("/removepeer", function (req, res) {
-  console.log("remove");
-  console.log(call.peers);
-  call.removePeer(req.param("peerid"));
-  console.log(call.peers);
-  res.json(call.toJSON());
-});
-
-// app.listen(process.env.PORT || 3000, () => console.log(`Server has started.`));
+// app.post("/removepeer", function (req, res) {
+//   console.log("remove");
+//   console.log(call.peers);
+//   call.removePeer(req.param("peerid"));
+//   console.log(call.peers);
+//   res.json(call.toJSON());
+// });
